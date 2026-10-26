@@ -1,0 +1,48 @@
+PANDUAN PASANG APLIKASI LAPORAN RONDAAN
+=======================================
+
+Persediaan ini dibuat sekali sahaja. Lebih mudah dibuat menggunakan komputer.
+
+A. LETAK APLIKASI DI GITHUB (percuma)
+1. Keluarkan (extract) fail laporan-rondaan.zip ke satu folder di komputer.
+2. Buka https://github.com/signup dan daftar akaun percuma.
+3. Selepas log masuk, tekan butang "+" di atas kanan, pilih "New repository".
+   - Repository name: laporan-rondaan
+   - Pilih "Public"
+   - Tekan "Create repository".
+4. Dalam repository baharu itu, tekan pautan "uploading an existing file".
+5. Pilih atau seret SEMUA fail (index.html, app.js, logo-mds.jpg dan lain-lain)
+   dari folder tadi ke dalam halaman itu. Tunggu sehingga semua selesai dimuat naik.
+   Tekan "Commit changes".
+6. Pergi ke Settings > Pages.
+   - Source: Deploy from a branch
+   - Branch: main, folder: / (root)
+   - Tekan "Save".
+7. Tunggu 1 hingga 2 minit. Pautan aplikasi akan muncul di bahagian atas halaman Pages,
+   contohnya: https://NAMA-AKAUN-AWAK.github.io/laporan-rondaan/
+
+Nota: Kod aplikasi boleh dilihat umum, tetapi laporan, gambar dan kunci Gemini
+TIDAK disimpan di GitHub. Semuanya kekal dalam telefon awak.
+
+B. DAPATKAN KUNCI GEMINI (percuma)
+1. Buka https://aistudio.google.com/app/apikey dan log masuk dengan akaun Google.
+2. Tekan "Create API key" dan salin kunci itu.
+3. Jangan letak kunci ini dalam fail di GitHub. Ia hanya ditampal dalam aplikasi.
+
+C. PASANG DI TELEFON ANDROID
+1. Buka pautan aplikasi (dari langkah A7) menggunakan Google Chrome.
+2. Tekan menu (tiga titik) > "Pasang aplikasi" atau "Tambah ke skrin utama".
+3. Buka aplikasi "Rondaan" dari skrin utama.
+4. Pergi ke Tetapan, tampal kunci Gemini, tekan "Simpan dan uji".
+5. Semak senarai anggota dalam Tetapan.
+
+D. KEMAS KINI APLIKASI
+Jika ada versi baharu, muat naik semula fail yang berubah ke repository yang sama
+(langkah A4 dan A5). Laporan dalam telefon tidak akan hilang.
+
+E. PERKARA PENTING
+- Laporan dan gambar disimpan dalam telefon sahaja. Jika data Chrome dipadam
+  atau aplikasi dibuang, laporan lama dalam aplikasi akan hilang. Fail Word yang
+  sudah dimuat turun tetap ada dalam folder Muat Turun.
+- Ciri AI memerlukan internet dan tertakluk kepada had harian kunci percuma.
+- Semak setiap penerangan AI sebelum menjana laporan rasmi.
