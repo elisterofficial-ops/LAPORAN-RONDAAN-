@@ -62,6 +62,7 @@
   }
 
   /* ---------- Keadaan ---------- */
+  const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
   const S = { staff: [], settings: {}, usage: {}, done: [], report: null, urls: {}, installEvt: null };
   let saveTimer = null;
 
@@ -675,7 +676,7 @@
       (s.kesalahan || []).forEach(k => { const t = k.tindakan || {}; if (t.tarikhAkhir && Number(t.tempohHari) > 0) due.push(`${k.premis || 'Premis'}: susulan ${W.fmtDate(t.tarikhAkhir)}`); if (t.jenis === 'kompaun' && t.tarikhBayar) due.push(`${k.premis || 'Premis'}: semak kompaun ${W.fmtDate(t.tarikhBayar)}`); });
       if (s.type === 'kenderaan' && s.tindakan && s.tindakan.tarikhAkhir && Number(s.tindakan.tempohHari) > 0) due.push(`Kenderaan terbiar: susulan ${W.fmtDate(s.tindakan.tarikhAkhir)}`);
     });
-    app.innerHTML = `<div class="done-screen"><div class="app" style="padding-bottom:20px"><div class="done-head"><div class="done-check">${icon('check')}</div><h1>Laporan siap</h1><span>Disimpan dalam folder Muat Turun</span></div>
+    app.innerHTML = `<div class="done-screen"><div class="app" style="padding-bottom:20px"><div class="done-head"><div class="done-check">${icon('check')}</div><h1>Laporan siap</h1><span>${NATIVE ? 'Simpan atau kongsi melalui menu kongsi' : 'Disimpan dalam folder Muat Turun'}</span></div>
       <div class="file-row"><div class="w">W</div><div class="tx"><span class="t1">${esc(r.fileName || '')}</span><span class="t2">${esc(summaryOf(r))}</span></div></div>
       ${due.length ? `<div class="done-list">${due.map(d => `<span class="pill gold">${icon('bell', 'ic-sm')} ${esc(d)}</span>`).join('')}</div>` : ''}
       <div class="done-actions"><button class="big-btn gold" data-act="redownload" style="flex:none">${icon('download')} Muat turun semula</button>
@@ -751,13 +752,29 @@
       toast('Laporan tidak dapat dijana: ' + (e.message || e));
     }
   }
-  function download(blob, name) {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 5000);
+  async function download(blob, name) {
+    if (!NATIVE) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 5000);
+      return;
+    }
+    /* Aplikasi Android: simpan sementara, kemudian buka menu kongsi supaya pengguna boleh pilih tempat simpan */
+    try {
+      const data = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(String(r.result).split(',')[1]);
+        r.onerror = () => rej(r.error);
+        r.readAsDataURL(blob);
+      });
+      const { uri } = await window.Capacitor.Plugins.Filesystem.writeFile({ path: name, data, directory: 'CACHE', recursive: true });
+      await window.Capacitor.Plugins.Share.share({ title: name, files: [uri] });
+    } catch (e) {
+      if (!/cancel/i.test(e.message || '')) toast('Fail tidak dapat dikongsi: ' + (e.message || e), 4500);
+    }
   }
   async function aiWrite(onlyId) {
     S.busy = onlyId || 'all'; render();
@@ -879,6 +896,7 @@
       case 'share': {
         const f = await DB.get('files', r.id);
         if (!f) { toast('Fail tidak dijumpai.'); break; }
+        if (NATIVE) { await download(f.blob, f.name); break; }
         const file = new File([f.blob], f.name, { type: f.blob.type });
         if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: f.name }); } catch (e2) { /* dibatalkan */ } }
         else toast('Telefon ini tidak menyokong kongsi fail. Guna Muat turun semula.');
@@ -927,8 +945,16 @@
     window.addEventListener('hashchange', route);
     window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); S.installEvt = e; if (!location.hash || location.hash === '#/') render(); });
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveNow(); });
+    if (NATIVE) {
+      const { App } = window.Capacitor.Plugins;
+      App.addListener('backButton', () => {
+        if (document.querySelector('.sheet-bg')) closeSheet();
+        else if (location.hash && location.hash !== '#/' && location.hash !== '#') history.back();
+        else App.exitApp();
+      });
+    }
     await route();
-    if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+    if ('serviceWorker' in navigator && location.protocol !== 'file:' && !NATIVE) navigator.serviceWorker.register('sw.js').catch(() => {});
   }
   boot();
 
