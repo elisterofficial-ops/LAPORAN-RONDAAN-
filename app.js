@@ -424,6 +424,11 @@
     const p = `sections.${si}.fields`;
     let h = `<section class="card section-card" id="sec-${s.id}"><div class="sec-title"><div class="tile tone-${T.tone}">${icon(T.icon)}</div><b>${esc(T.label)}</b><button type="button" class="x-btn" data-act="rmsec" data-si="${si}" aria-label="Buang bahagian ${esc(T.label)}">${icon('trash', 'ic-sm')}</button></div>`;
     switch (s.type) {
+      case 'kosong':
+        h += fArea('Lokasi / premis yang diperiksa', `${p}.lokasi`, { ph: 'Satu lokasi setiap baris', rows: 3 });
+        h += fArea('Catatan (pilihan)', `${p}.catatan`, { ph: 'Contoh: Hujan lebat, kawasan sedang dibersihkan', rows: 2 });
+        h += `<span class="hint">Ayat rasmi "tiada penemuan" ditulis automatik dalam laporan. Tiada kesalahan atau tindakan perlu diisi.</span>`;
+        break;
       case 'premis':
         h += fText('Perkara', `${p}.perkara`, { ph: 'Contoh: Pemeriksaan kesalahan penggunaan tempat letak kereta awam' });
         h += fArea('Lokasi / premis diperiksa', `${p}.lokasi`, { ph: 'Satu premis setiap baris', rows: 3 });
@@ -501,7 +506,7 @@
         h += kesalahanEditor(si, s);
         break;
     }
-    h += fArea('Nota tambahan untuk AI (pilihan)', `${p}.nota`, { ph: 'Fakta lain yang perlu disebut, contohnya: pemilik tiada di premis, diketuai oleh Penolong Ketua Bahagian', rows: 2 });
+    if (s.type !== 'kosong') h += fArea('Nota tambahan untuk AI (pilihan)', `${p}.nota`, { ph: 'Fakta lain yang perlu disebut, contohnya: pemilik tiada di premis, diketuai oleh Penolong Ketua Bahagian', rows: 2 });
     h += photosBlock(si, s);
     return h + '</section>';
   }
@@ -630,7 +635,8 @@
       if (s.type === 'aduan' && !f.tajuk) warn('Aduan awam: tajuk aduan kosong.', s.id);
       if (s.type === 'susulan' && !f.status) warn('Susulan: status pematuhan belum dipilih.', s.id);
       if (s.type === 'ppw' && !f.bilangan) warn('PPW: bilangan poster belum diisi.', s.id);
-      if (!(s.photos || []).length && s.type !== 'mesyuarat') warn(`${L}: tiada gambar.`, s.id);
+      if (s.type === 'kosong' && !String(f.lokasi || '').trim()) warn(`${L}: lokasi / premis yang diperiksa belum diisi.`, s.id);
+      if (!(s.photos || []).length && !['mesyuarat', 'kosong'].includes(s.type)) warn(`${L}: tiada gambar.`, s.id);
       if (['susulan', 'sitaan'].includes(s.type) && (s.photos || []).length && !(s.photos || []).some(p => p.label)) warn(`${L}: gambar belum dilabel Sebelum / Selepas.`, s.id);
     });
     return out;

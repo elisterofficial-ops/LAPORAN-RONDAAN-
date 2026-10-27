@@ -55,9 +55,10 @@ window.REPORT_TYPES = {
   susulan:   { label: 'Pemeriksaan susulan', short: 'Susulan', tone: 'amber', icon: 'repeat' },
   ppw:       { label: 'PPW / iklan haram', short: 'PPW', tone: 'red', icon: 'poster' },
   bersepadu: { label: 'Operasi bersepadu', short: 'Bersepadu', tone: 'blue', icon: 'shield' },
-  sitaan:    { label: 'Operasi sitaan', short: 'Sitaan', tone: 'red', icon: 'box' }
+  sitaan:    { label: 'Operasi sitaan', short: 'Sitaan', tone: 'red', icon: 'box' },
+  kosong:    { label: 'Pemantauan harian (tiada penemuan)', short: 'Tiada penemuan', tone: 'green', icon: 'check' }
 };
-window.REPORT_ORDER = ['premis', 'kenderaan', 'permit', 'aduan', 'susulan', 'ppw', 'mesyuarat', 'bersepadu', 'sitaan'];
+window.REPORT_ORDER = ['kosong', 'premis', 'kenderaan', 'permit', 'aduan', 'susulan', 'ppw', 'mesyuarat', 'bersepadu', 'sitaan'];
 
 /* Jenis tindakan */
 window.TINDAKAN = {
@@ -71,6 +72,7 @@ window.TINDAKAN = {
 
 /* Teks tetap */
 window.TEMPLATES = {
+  kosongHasil: 'Semasa pemantauan harian dijalankan di lokasi tersebut, tiada sebarang penemuan atau kesalahan dikesan. Tiada tindakan penguatkuasa diambil.',
   ppwKeterangan: 'Anggota-anggota penguatkuasa telah melakukan pemantauan harian di lokasi seperti di atas dengan tujuan untuk memantau dan memeriksa poster iklan pinjaman wang tanpa lesen yang biasa ditampal dan dipasang pada papan tanda di tepi jalan. Tindakan menampal dan memasang iklan pinjaman wang tanpa lesen ini bukan sahaja mencacatkan pemandangan malahan juga menimbulkan rasa kurang senang dan selesa dalam kalangan orang awam, penduduk sekitar taman perumahan serta menghalang penglihatan pengguna jalan raya terutama ketika keluar dan masuk simpang jalan.',
   ppwPuncaKuasa: [
     'Anggota-anggota penguatkuasa telah menggunakan peruntukan undang-undang berikut semasa mengambil tindakan menyita, menurunkan dan menanggalkan poster iklan pinjaman wang tanpa lesen seperti berikut:',

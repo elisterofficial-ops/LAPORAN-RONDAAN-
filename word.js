@@ -237,6 +237,14 @@
     const f = s.fields || {};
     const nx = counter(n);
     switch (s.type) {
+      case 'kosong': {
+        out.push(heading(`${n}.0 ${T.label.toUpperCase()}`));
+        out.push(infoTable([['LOKASI / PREMIS DIPERIKSA', linesOf(f.lokasi).length > 1 ? linesOf(f.lokasi) : f.lokasi]]));
+        out.push(subheading('HASIL PEMERIKSAAN'));
+        out.push(...bodyParas(window.TEMPLATES.kosongHasil));
+        if (f.catatan) { out.push(subheading('CATATAN')); out.push(...bodyParas(f.catatan)); }
+        break;
+      }
       case 'premis': {
         out.push(heading(`${n}.0 ${T.label.toUpperCase()}`));
         out.push(infoTable([['PERKARA', f.perkara], ['LOKASI PEMERIKSAAN', linesOf(f.lokasi).length > 1 ? linesOf(f.lokasi) : f.lokasi]]));

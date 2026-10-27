@@ -114,6 +114,7 @@
   }
 
   const KEYS = {
+    kosong: {},
     premis: { hasil: 'Hasil pemeriksaan: apa yang dilakukan, apa yang ditemui di setiap premis, kesalahan dan tindakan yang diambil (termasuk tempoh pemulihan / tarikh akhir).' },
     permit: { hasil: 'Hasil pemeriksaan permit: tujuan pemeriksaan, status pematuhan dan arahan yang diberi.' },
     kenderaan: { hasil: 'Hasil pemantauan kenderaan terbiar: bilangan kenderaan (tulis nombor dalam perkataan dan angka, cth. dua (2)), lokasi, tindakan dan peruntukan undang-undang. Jangan senaraikan semula setiap nombor plat kerana jadual disediakan.' },
@@ -136,7 +137,8 @@
 
   async function writeDescriptions(report, staff, onlySectionId) {
     const facts = factsOf(report, staff);
-    const want = report.sections.filter(s => !onlySectionId || s.id === onlySectionId).map(s => ({ id: s.id, jenis: s.type, tulis: KEYS[s.type] }));
+    const want = report.sections.filter(s => (!onlySectionId || s.id === onlySectionId) && Object.keys(KEYS[s.type] || {}).length).map(s => ({ id: s.id, jenis: s.type, tulis: KEYS[s.type] }));
+    if (!want.length) return {}; // Tiada bahagian yang perlu teks AI (cth. tiada penemuan): tidak panggil API
     const prompt = [
       ...RULES,
       '',
