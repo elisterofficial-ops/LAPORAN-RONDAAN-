@@ -101,7 +101,8 @@
             barangDisita: k.tindakan.barang || undefined
           } : 'tiada'
         })),
-        kenderaan: s.kenderaan,
+        bilanganKenderaan: s.type === 'kenderaan' ? (s.kenderaan || []).length : undefined,
+        kenderaan: s.type === 'kenderaan' ? (s.kenderaan || []).map(v => ({ jenis: v.jenis, warna: v.warna, noPlat: v.noPlat })) : undefined,
         tindakanKenderaan: s.type === 'kenderaan' && s.tindakan && s.tindakan.jenis ? {
           jenis: window.TINDAKAN[s.tindakan.jenis].label, tarikhAkhir: s.tindakan.tarikhAkhir ? W.fmtDate(s.tindakan.tarikhAkhir) : undefined,
           peruntukan: W.cite('K', '27(1)')
@@ -116,11 +117,11 @@
   const KEYS = {
     premis: { hasil: 'Hasil pemeriksaan: apa yang dilakukan, apa yang ditemui di setiap premis, kesalahan dan tindakan yang diambil (termasuk tempoh pemulihan / tarikh akhir).' },
     permit: { hasil: 'Hasil pemeriksaan permit: tujuan pemeriksaan, status pematuhan dan arahan yang diberi.' },
-    kenderaan: { hasil: 'Hasil pemantauan kenderaan terbiar: bilangan kenderaan (tulis nombor dalam perkataan dan angka, cth. dua (2)), lokasi, tindakan dan peruntukan undang-undang. Jangan senaraikan semula setiap nombor plat kerana jadual disediakan.' },
+    kenderaan: { hasil: 'Hasil pemantauan kenderaan terbiar: bilangan kenderaan (ikut bilanganKenderaan, tulis nombor dalam perkataan dan angka, cth. dua (2)), lokasi, tindakan dan peruntukan undang-undang. Jangan senaraikan semula setiap nombor plat kerana jadual disediakan.' },
     mesyuarat: { hasil: 'Catatan mesyuarat / taklimat / kerja ukur: tujuan dan hasil.' },
     aduan: { hasil: 'Hasil pemeriksaan aduan: bila dan di mana pemeriksaan dibuat, apa yang ditemui.', kesimpulan: 'Kesimpulan: sama ada aduan sah atau tidak sah (ikut butiran.kesimpulan) dan nasihat / tindakan seterusnya.' },
     susulan: { hasil: 'Hasil pemeriksaan susulan: apa yang diperiksa berbanding arahan asal dan keadaan semasa.', kesimpulan: 'Kesimpulan: patuh atau tidak patuh (ikut butiran.status) dan tindakan seterusnya.' },
-    ppw: { hasil: 'Hasil pemantauan PPW: lokasi poster ditemui, bilangan poster yang disita / diturunkan (ikut butiran.bilangan), dan pengesahan kawasan sudah bersih.' },
+    ppw: { hasil: 'Hasil pemantauan PPW: lokasi poster ditemui dan bilangan poster yang disita / diturunkan (ikut butiran.bilangan). Sahkan kawasan sudah bersih hanya jika butiran.bersih ialah "Ya". Jika "Tidak" atau tiada, jangan sebut tentang kebersihan kawasan.' },
     bersepadu: { keterangan: 'Keterangan operasi: latar belakang, objektif, agensi yang terlibat dan rujukan surat jemputan.', rumusan: 'Rumusan operasi secara keseluruhan dan tindakan susulan.' },
     sitaan: { latarBelakang: 'Latar belakang operasi sitaan: aduan, pemeriksaan dan notis terdahulu, dan sebab sitaan dibuat.', kronologi: 'Kronologi tindakan sitaan mengikut masa: taklimat, tiba di lokasi, sitaan, tamat, barang dibawa ke stor, repot polis.' }
   };
@@ -131,6 +132,7 @@
     'Jika sesuatu fakta tiada, jangan sebut langsung. Jangan tulis tempat kosong seperti [NAMA].',
     'Tulis masa dalam format 0930hrs dan tarikh dalam format 26.10.2026.',
     'Gunakan istilah "anggota penguatkuasa", "premis", "notis amaran tegas" dan sebagainya seperti contoh.',
+    'Contoh gaya penulisan hanya untuk gaya ayat. Jangan salin nombor, bilangan, nama tempat, nama premis, tempoh atau sebarang fakta daripada contoh.',
     'Setiap bahagian ditulis dalam perenggan pendek (2 hingga 4 ayat setiap perenggan). Pisahkan perenggan dengan baris kosong. Jangan letak nombor perenggan, tajuk atau tanda bullet.'
   ];
 

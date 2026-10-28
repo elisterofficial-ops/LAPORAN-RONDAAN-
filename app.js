@@ -475,6 +475,7 @@
       case 'ppw':
         h += fText('Lokasi / kawasan', `${p}.lokasi`, { icon: 'pin', ph: 'Contoh: Tarat Central dan Tarat Jaya' });
         h += fText('Bilangan poster disita / diturunkan', `${p}.bilangan`, { type: 'number', ph: 'Contoh: 16' });
+        h += `<span class="label">Kawasan sudah bersih?</span>` + fChips(`${p}.bersih`, ['Ya', 'Tidak']);
         h += `<span class="hint">Keterangan dan punca kuasa PPW dimasukkan automatik ke dalam laporan.</span>`;
         break;
       case 'bersepadu':
